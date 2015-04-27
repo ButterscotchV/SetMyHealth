@@ -1,0 +1,8 @@
+name: SetMyHealth
+main: me.Dankrushen.SetMyHealth.setMyHealth
+version: 0.01
+description: Allows you to easily alter players health, air, and hunger
+commands:
+  sethealth:
+    description: Sets a players health to the defined amount
+    usage: /sethealth [player] <amount>
