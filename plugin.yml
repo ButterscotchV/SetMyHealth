@@ -4,5 +4,12 @@ version: 0.01
 description: Allows you to easily alter players health, air, and hunger
 commands:
   sethealth:
-    description: Sets a players health to the defined amount
+    description: >
+                Sets a players health to the defined amount
     usage: /sethealth [player] <amount>
+    alias: sh
+  sethunger:
+    description: >
+                Sets a players hunger to the defined amount
+    usage: /sethunger [player] <amount>
+    alias: shr

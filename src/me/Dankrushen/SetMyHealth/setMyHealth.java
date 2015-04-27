@@ -26,7 +26,7 @@ public class setMyHealth extends JavaPlugin{
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		Player player = (Player) sender;
-		if(commandLabel.equalsIgnoreCase("sethealth")){
+		if(commandLabel.equalsIgnoreCase("sethealth") || commandLabel.equalsIgnoreCase("sh")){
 			if(args.length == 0){
 				player.sendMessage(ChatColor.DARK_RED + "Not enough arguments!");
 				return false;
@@ -57,6 +57,35 @@ public class setMyHealth extends JavaPlugin{
 				return false;
 			}
 		}
+		if(commandLabel.equalsIgnoreCase("sethunger") || commandLabel.equalsIgnoreCase("shr")){
+			if(args.length == 0){
+				player.sendMessage(ChatColor.DARK_RED + "Not enough arguments!");
+				return false;
+			}
+			else if(args.length == 1){
+				int amount = Integer.parseInt(args[0]);
+				player.setFoodLevel(amount*2);
+				player.sendMessage("You have set your hunger to " + ChatColor.GREEN + amount);
+				}
+				else player.sendMessage(ChatColor.DARK_RED + "That number is too high! Your max hunger is " + ChatColor.DARK_GREEN + "10");
+			}
+			else if(args.length == 2){
+				@SuppressWarnings("deprecation")
+				Player target = player.getServer().getPlayer(args[0]);
+				if(target != null){
+					int amount = Integer.parseInt(args[1]);
+					if(amount <= 10){
+						target.setFoodLevel(amount*2);
+						target.sendMessage("Your hunger has been set to " + ChatColor.GREEN + amount);
+					}
+					else player.sendMessage(ChatColor.DARK_RED + "That number is too high! " + ChatColor.DARK_GREEN + args[0] + "'s" + ChatColor.DARK_RED + " max hunger is " + ChatColor.DARK_GREEN + " 10");	
+				}
+				else player.sendMessage(ChatColor.DARK_RED + "Could not find player \"" + ChatColor.DARK_GREEN + args[0] + ChatColor.DARK_RED + "\"");
+			}
+			else if(args.length > 2){
+				player.sendMessage(ChatColor.DARK_RED + "Too many arguments!");
+				return false;
+			}
 		return true;
 	}
 }
