@@ -12,7 +12,19 @@ commands:
     description: Sets a players hunger
     usage: /sethunger [player] <amount>
     aliases: shr
+  setair:
+    description: Sets a players air
+    usage: /setair [player] <amount>
+    aliases: sa
   maxhealth:
     description: Sets a players max health
     usage: /maxhealth [player] <amount>
     aliases: mh
+  maxair:
+    description: Sets a players max air
+    usage: /maxair [player] <amount>
+    aliases: ma
+  setmyhealth:
+    description: Gives plugin information
+    usage: /setmyhealth
+    aliases: smh
