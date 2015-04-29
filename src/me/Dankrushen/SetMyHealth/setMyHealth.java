@@ -145,7 +145,7 @@ public class setMyHealth extends JavaPlugin{
 						if(target != null){
 							double amount = Double.parseDouble(args[1]);
 							if(amount <= 50){ //Config will be here
-								target.setHealth(amount*2);
+								target.setMaxHealth(amount*2);
 								target.sendMessage("Your max health has been set to " + ChatColor.GREEN + amount + ChatColor.RESET + " hearts.");
 							}
 							else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + "50 (Will be in config).");
