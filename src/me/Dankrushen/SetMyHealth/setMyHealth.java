@@ -81,6 +81,7 @@ public class setMyHealth extends JavaPlugin{
 						Double amount2= amount*2;
 						int amountfinal = amount2.intValue();
 						if(amount <= 10){
+							player.setSaturation(20);
 							player.setFoodLevel(amountfinal);
 							player.sendMessage("You have set your hunger to " + ChatColor.GREEN + amount + ChatColor.RESET + ".");
 						}
@@ -100,6 +101,7 @@ public class setMyHealth extends JavaPlugin{
 							Double amount2= amount*2;
 							int amountfinal = amount2.intValue();
 							if(amount <= 10){
+								target.setSaturation(20);
 								target.setFoodLevel(amountfinal);
 								target.sendMessage("Your hunger has been set to " + ChatColor.GREEN + amount + ChatColor.RESET + ".");
 							}
