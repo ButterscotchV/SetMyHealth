@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -16,13 +17,34 @@ public class setMyHealth extends JavaPlugin{
 	
 	public void onDisable() {
 		PluginDescriptionFile pdfFile = this.getDescription();
-		this.logger.info(pdfFile.getName() + " Version " + pdfFile.getVersion() + " Has Been Disabled.");
+		this.logger.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " Has Been Disabled.");
 	}
 
 	public void onEnable() {
 		PluginDescriptionFile pdfFile = this.getDescription();
-		this.logger.info(pdfFile.getName() + " Version " + pdfFile.getVersion() + " Has Been Enabled.");
+		this.logger.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " Has Been Enabled.");
+		initialiseConfig();
 	}
+	
+	public void initialiseConfig(){
+		
+		final FileConfiguration config = this.getConfig();
+        config.options().header("Configuration For SetMyHealth");
+ 
+        config.addDefault("Note", "Changes how high players can set their own maximum health (This is just information about the config setting below)");
+        config.addDefault("MaxHealthLimit", 50);
+        config.addDefault("Note2", "Changes how high players can set other players maximum health (This is just information about the config setting below)");
+        config.addDefault("MaxHealthOthersLimit", 50);
+        
+        config.addDefault("Note3", "Changes how high players can set their own maximum air (This is just information about the config setting below)");
+        config.addDefault("MaxAirLimit", 60);
+        config.addDefault("Note4", "Changes how high players can set other players maximum air (This is just information about the config setting below)");
+        config.addDefault("MaxAirOthersLimit", 60);
+ 
+        config.options().copyDefaults(true);
+        
+        saveConfig();
+		}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		Player player = (Player) sender;
@@ -33,7 +55,7 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 1){
 				if(player.hasPermission("SetMyHealth.use.sethealth")){
-					if ( args[0].matches("[0-9]+") ){
+					if ( args[0].matches("[0-9.]+") ){
 						double amount = Double.parseDouble(args[0]);
 						if(amount*2 <= player.getMaxHealth()){
 							player.setHealth(amount*2);
@@ -47,14 +69,18 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 2){
 				if(player.hasPermission("SetMyHealth.use.sethealth.others")){
-					if ( args[1].matches("[0-9]+") ){
+					if ( args[1].matches("[0-9.]+") ){
 						@SuppressWarnings("deprecation")
 						Player target = player.getServer().getPlayer(args[0]);
 						if(target != null){
 							double amount = Double.parseDouble(args[1]);
 							if(amount*2 <= target.getMaxHealth()){
 								target.setHealth(amount*2);
-								target.sendMessage("Your health has been set to " + ChatColor.GREEN + amount + ChatColor.RESET + " hearts.");
+								if(player != target){
+									target.sendMessage("Your health has been set to " + ChatColor.GREEN + amount + ChatColor.RESET + " hearts by " + ChatColor.DARK_GREEN + player.getDisplayName() + ChatColor.RESET + ".");
+									player.sendMessage(ChatColor.DARK_GREEN + "" + target.getDisplayName() + "'s" + ChatColor.RESET + " health has been set to " + ChatColor.GREEN + amount + ChatColor.RESET + " hearts.");
+								}
+								else player.sendMessage("You have set your health to " + ChatColor.GREEN + amount + ChatColor.RESET + " hearts.");
 							}
 							else player.sendMessage(ChatColor.DARK_RED + "That number is too high! " + ChatColor.DARK_GREEN + args[0] + "'s" + ChatColor.DARK_RED + " max health is " + ChatColor.DARK_GREEN + target.getMaxHealth()/2);	
 						}
@@ -76,7 +102,7 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 1){
 				if(player.hasPermission("SetMyHealth.use.sethunger")){
-					if ( args[0].matches("[0-9]+") ){
+					if ( args[0].matches("[0-9.]+") ){
 						double amount = Double.parseDouble(args[0]);
 						Double amount2= amount*2;
 						int amountfinal = amount2.intValue();
@@ -93,7 +119,7 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 2){
 				if(player.hasPermission("SetMyHealth.use.sethunger.others")){
-					if ( args[1].matches("[0-9]+") ){
+					if ( args[1].matches("[0-9.]+") ){
 						@SuppressWarnings("deprecation")
 						Player target = player.getServer().getPlayer(args[0]);
 						if(target != null){
@@ -103,7 +129,11 @@ public class setMyHealth extends JavaPlugin{
 							if(amount <= 10){
 								target.setSaturation(20);
 								target.setFoodLevel(amountfinal);
-								target.sendMessage("Your hunger has been set to " + ChatColor.GREEN + amount + ChatColor.RESET + ".");
+								if(player != target){
+									target.sendMessage("Your hunger has been set to " + ChatColor.GREEN + amount + ChatColor.RESET + " by " + ChatColor.DARK_GREEN + player.getDisplayName() + ChatColor.RESET + ".");
+									player.sendMessage(ChatColor.DARK_GREEN + "" + target.getDisplayName() + "'s" + ChatColor.RESET + " hunger has been set to " + ChatColor.GREEN + amount + ChatColor.RESET + ".");
+								}
+								else player.sendMessage("You have set your hunger to " + ChatColor.GREEN + amount + ChatColor.RESET + ".");
 							}
 							else player.sendMessage(ChatColor.DARK_RED + "That number is too high! " + ChatColor.DARK_GREEN + args[0] + "'s" + ChatColor.DARK_RED + " max hunger is " + ChatColor.DARK_GREEN + "10" + ChatColor.DARK_RED + ".");
 						}
@@ -125,13 +155,13 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 1){
 				if(player.hasPermission("SetMyHealth.use.maxhealth")){
-					if ( args[0].matches("[0-9]+") ){
+					if ( args[0].matches("[0-9.]+") ){
 						double amount = Double.parseDouble(args[0]);
-						if(amount <= 50){ //Config will be here
+						if(amount <= getConfig().getDouble("MaxHealthLimit")){
 							player.setMaxHealth(amount*2);
 							player.sendMessage("You have set your max health to " + ChatColor.GREEN + amount + ChatColor.RESET + " hearts.");
 						}
-						else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + "50 (Will be in config).");
+						else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + getConfig().getInt("MaxHealthLimit") + ".");
 					}
 					else player.sendMessage(ChatColor.DARK_RED + "That is not a valid number!");
 				}
@@ -139,16 +169,20 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 2){
 				if(player.hasPermission("SetMyHealth.use.maxhealth.others")){
-					if ( args[1].matches("[0-9]+") ){
+					if ( args[1].matches("[0-9.]+") ){
 						@SuppressWarnings("deprecation")
 						Player target = player.getServer().getPlayer(args[0]);
 						if(target != null){
 							double amount = Double.parseDouble(args[1]);
-							if(amount <= 50){ //Config will be here
+							if(amount <= getConfig().getDouble("MaxHealthOthersLimit")){
 								target.setMaxHealth(amount*2);
-								target.sendMessage("Your max health has been set to " + ChatColor.GREEN + amount + ChatColor.RESET + " hearts.");
+								if(player != target){
+									target.sendMessage("Your max health has been set to " + ChatColor.GREEN + amount + ChatColor.RESET + " hearts by " + ChatColor.DARK_GREEN + player.getDisplayName() + ChatColor.RESET + ".");
+									player.sendMessage(ChatColor.DARK_GREEN + "" + target.getDisplayName() + "'s" + ChatColor.RESET + " max health has been set to " + ChatColor.GREEN + amount + ChatColor.RESET + " hearts.");
+								}
+								else player.sendMessage("You have set your max health to " + ChatColor.GREEN + amount + ChatColor.RESET + " hearts.");
 							}
-							else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + "50 (Will be in config).");
+							else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + getConfig().getInt("MaxHealthOthersLimit") + ".");
 						}
 						else player.sendMessage(ChatColor.DARK_RED + "Could not find player \"" + ChatColor.DARK_GREEN + args[0] + ChatColor.DARK_RED + "\"");
 					}
@@ -171,11 +205,11 @@ public class setMyHealth extends JavaPlugin{
 					if ( args[0].matches("[0-9]+") ){
 						int amount1 = Integer.parseInt(args[0]);
 						int amount = (int) (amount1*19.6078431373);
-						if(amount1 <= 60){ //Config will be here
+						if(amount1 <= getConfig().getDouble("MaxAirLimit")){
 							player.setMaximumAir(amount);
 							player.sendMessage("You have set your max air to approximatly " + ChatColor.GREEN + amount1 + ChatColor.RESET + " seconds.");
 						}
-						else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + "60 (Will be in config)."); //Remove "'60 (Will be in config).'" from this line when config is working
+						else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + getConfig().getInt("MaxAirLimit") + "."); //Remove "'60 (Will be in config).'" from this line when config is working
 					}
 					else player.sendMessage(ChatColor.DARK_RED + "That is not a valid number! (No decimals!)");
 				}
@@ -189,11 +223,15 @@ public class setMyHealth extends JavaPlugin{
 						if(target != null){
 							int amount1 = Integer.parseInt(args[1]);
 							int amount = (int) (amount1*19.6078431373);
-							if(amount1 <= 60){ //Config will be here
+							if(amount1 <= getConfig().getDouble("MaxAirOthersLimit")){
 								target.setMaximumAir(amount);
-								target.sendMessage("Your max air has been set to approximatly " + ChatColor.GREEN + amount1 + ChatColor.RESET + " seconds.");
+								if(player != target){
+									target.sendMessage("Your max air has been set to approximatly " + ChatColor.GREEN + amount1 + ChatColor.RESET + " seconds by " + ChatColor.DARK_GREEN + player.getDisplayName() + ChatColor.RESET + ".");
+									player.sendMessage(ChatColor.DARK_GREEN + "" + target.getDisplayName() + "'s" + ChatColor.RESET + " max air has been set to approximatly " + ChatColor.GREEN + amount1 + ChatColor.RESET + " seconds.");
+								}
+								else player.sendMessage("You have set your max air to approximatly " + ChatColor.GREEN + amount1 + ChatColor.RESET + " seconds.");
 							}
-							else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + "60 (Will be in config)."); //Remove "'60 (Will be in config).'" from this line when config is working
+							else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + getConfig().getInt("MaxAirOthersLimit") + "."); //Remove "'60 (Will be in config).'" from this line when config is working
 						}
 						else player.sendMessage(ChatColor.DARK_RED + "Could not find player \"" + ChatColor.DARK_GREEN + args[0] + ChatColor.DARK_RED + "\"");
 					}
@@ -220,7 +258,7 @@ public class setMyHealth extends JavaPlugin{
 							player.setRemainingAir(amount);
 							player.sendMessage("You have set your air to approximatly " + ChatColor.GREEN + amount1 + ChatColor.RESET + " seconds.");
 						}
-						else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + Math.ceil(player.getMaximumAir()/19.6078431373));
+						else player.sendMessage(ChatColor.DARK_RED + "That number is too high! Your maximum amount is " + ChatColor.DARK_GREEN + Math.ceil(player.getMaximumAir()/19.6078431373));
 					}
 					else player.sendMessage(ChatColor.DARK_RED + "That is not a valid number! (No decimals!)");
 				}
@@ -234,12 +272,15 @@ public class setMyHealth extends JavaPlugin{
 						if(target != null){
 							int amount1 = Integer.parseInt(args[1]);
 							int amount = (int) (amount1*19.6078431373);
-							if(amount1 <= 60){ //Config will be here
-								target.setMaximumAir(amount);
+							if(amount1 <= Math.ceil(target.getMaximumAir()/19.6078431373)){
 								target.setRemainingAir(amount);
-								target.sendMessage("Your max air has been set to approximatly " + ChatColor.GREEN + amount1 + ChatColor.RESET + " seconds.");
+								if(player != target){
+									target.sendMessage("Your air has been set to approximatly " + ChatColor.GREEN + amount1 + ChatColor.RESET + " seconds by " + ChatColor.DARK_GREEN + player.getDisplayName() + ChatColor.RESET + ".");
+									player.sendMessage(ChatColor.DARK_GREEN + "" + target.getDisplayName() + "'s" + ChatColor.RESET + " air has been set to approximatly " + ChatColor.GREEN + amount1 + ChatColor.RESET + " seconds.");
+								}
+								else player.sendMessage("You have set your air to approximatly " + ChatColor.GREEN + amount1 + ChatColor.RESET + " seconds.");
 							}
-							else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + Math.ceil(player.getMaximumAir()/19.6078431373));
+							else player.sendMessage(ChatColor.DARK_RED + "That number is too high! " + ChatColor.DARK_GREEN + target + "'s" + ChatColor.RESET + " maximum amount is " + ChatColor.DARK_GREEN + Math.ceil(target.getMaximumAir()/19.6078431373));
 						}
 						else player.sendMessage(ChatColor.DARK_RED + "Could not find player \"" + ChatColor.DARK_GREEN + args[0] + ChatColor.DARK_RED + "\"");
 					}
@@ -261,7 +302,7 @@ public class setMyHealth extends JavaPlugin{
 					player.sendMessage(ChatColor.DARK_RED + "Too many arguments!");
 					return false;
 				}
-				player.sendMessage(ChatColor.AQUA + "|||||||" + name + " Version " + version + " made by Dankrushen|||||||");
+				player.sendMessage(ChatColor.AQUA + "|||||||" + name + " v" + version + " made by Dankrushen|||||||");
 				player.sendMessage(ChatColor.DARK_AQUA + "Permission for all commands: SetMyHealth.use.*");
 				player.sendMessage(ChatColor.DARK_AQUA + "For permissions for using the command on other players just add \".others\" to the end.");
 				player.sendMessage("");
