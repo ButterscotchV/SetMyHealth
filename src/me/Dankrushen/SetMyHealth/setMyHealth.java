@@ -29,21 +29,8 @@ public class setMyHealth extends JavaPlugin{
 	public void initialiseConfig(){
 		
 		final FileConfiguration config = this.getConfig();
-        config.options().header("Configuration For SetMyHealth");
- 
-        config.addDefault("Note", "Changes how high players can set their own maximum health (This is just information about the config setting below)");
-        config.addDefault("MaxHealthLimit", 50);
-        config.addDefault("Note2", "Changes how high players can set other players maximum health (This is just information about the config setting below)");
-        config.addDefault("MaxHealthOthersLimit", 50);
-        
-        config.addDefault("Note3", "Changes how high players can set their own maximum air (This is just information about the config setting below)");
-        config.addDefault("MaxAirLimit", 60);
-        config.addDefault("Note4", "Changes how high players can set other players maximum air (This is just information about the config setting below)");
-        config.addDefault("MaxAirOthersLimit", 60);
- 
-        config.options().copyDefaults(true);
-        
-        saveConfig();
+		config.options().copyDefaults(true);
+		this.saveDefaultConfig();
 		}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
@@ -55,7 +42,7 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 1){
 				if(player.hasPermission("SetMyHealth.use.sethealth")){
-					if ( args[0].matches("[0-9.]+") ){
+					if(args[0].matches("[0-9.]+") ){
 						double amount = Double.parseDouble(args[0]);
 						if(amount*2 <= player.getMaxHealth()){
 							player.setHealth(amount*2);
@@ -69,7 +56,7 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 2){
 				if(player.hasPermission("SetMyHealth.use.sethealth.others")){
-					if ( args[1].matches("[0-9.]+") ){
+					if(args[1].matches("[0-9.]+") ){
 						@SuppressWarnings("deprecation")
 						Player target = player.getServer().getPlayer(args[0]);
 						if(target != null){
@@ -102,7 +89,7 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 1){
 				if(player.hasPermission("SetMyHealth.use.sethunger")){
-					if ( args[0].matches("[0-9.]+") ){
+					if(args[0].matches("[0-9.]+") ){
 						double amount = Double.parseDouble(args[0]);
 						Double amount2= amount*2;
 						int amountfinal = amount2.intValue();
@@ -119,7 +106,7 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 2){
 				if(player.hasPermission("SetMyHealth.use.sethunger.others")){
-					if ( args[1].matches("[0-9.]+") ){
+					if(args[1].matches("[0-9.]+") ){
 						@SuppressWarnings("deprecation")
 						Player target = player.getServer().getPlayer(args[0]);
 						if(target != null){
@@ -155,7 +142,7 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 1){
 				if(player.hasPermission("SetMyHealth.use.maxhealth")){
-					if ( args[0].matches("[0-9.]+") ){
+					if(args[0].matches("[0-9.]+") ){
 						double amount = Double.parseDouble(args[0]);
 						if(amount <= getConfig().getDouble("MaxHealthLimit")){
 							player.setMaxHealth(amount*2);
@@ -169,7 +156,7 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 2){
 				if(player.hasPermission("SetMyHealth.use.maxhealth.others")){
-					if ( args[1].matches("[0-9.]+") ){
+					if(args[1].matches("[0-9.]+") ){
 						@SuppressWarnings("deprecation")
 						Player target = player.getServer().getPlayer(args[0]);
 						if(target != null){
@@ -202,14 +189,14 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 1){
 				if(player.hasPermission("SetMyHealth.use.maxair")){
-					if ( args[0].matches("[0-9]+") ){
+					if(args[0].matches("[0-9]+") ){
 						int amount1 = Integer.parseInt(args[0]);
 						int amount = (int) (amount1*19.6078431373);
 						if(amount1 <= getConfig().getDouble("MaxAirLimit")){
 							player.setMaximumAir(amount);
 							player.sendMessage("You have set your max air to approximatly " + ChatColor.GREEN + amount1 + ChatColor.RESET + " seconds.");
 						}
-						else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + getConfig().getInt("MaxAirLimit") + "."); //Remove "'60 (Will be in config).'" from this line when config is working
+						else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + getConfig().getInt("MaxAirLimit") + "."); 
 					}
 					else player.sendMessage(ChatColor.DARK_RED + "That is not a valid number! (No decimals!)");
 				}
@@ -217,7 +204,7 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 2){
 				if(player.hasPermission("SetMyHealth.use.maxair.others")){
-					if ( args[1].matches("[0-9]+") ){
+					if(args[1].matches("[0-9]+") ){
 						@SuppressWarnings("deprecation")
 						Player target = player.getServer().getPlayer(args[0]);
 						if(target != null){
@@ -231,7 +218,7 @@ public class setMyHealth extends JavaPlugin{
 								}
 								else player.sendMessage("You have set your max air to approximatly " + ChatColor.GREEN + amount1 + ChatColor.RESET + " seconds.");
 							}
-							else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + getConfig().getInt("MaxAirOthersLimit") + "."); //Remove "'60 (Will be in config).'" from this line when config is working
+							else player.sendMessage(ChatColor.DARK_RED + "That number is too high! The maximum amount is " + ChatColor.DARK_GREEN + getConfig().getInt("MaxAirOthersLimit") + ".");
 						}
 						else player.sendMessage(ChatColor.DARK_RED + "Could not find player \"" + ChatColor.DARK_GREEN + args[0] + ChatColor.DARK_RED + "\"");
 					}
@@ -251,7 +238,7 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 1){
 				if(player.hasPermission("SetMyHealth.use.setair")){
-					if ( args[0].matches("[0-9]+") ){
+					if(args[0].matches("[0-9]+") ){
 						int amount1 = Integer.parseInt(args[0]);
 						int amount = (int) (amount1*19.6078431373);
 						if(amount <= player.getMaximumAir()){
@@ -266,7 +253,7 @@ public class setMyHealth extends JavaPlugin{
 			}
 			else if(args.length == 2){
 				if(player.hasPermission("SetMyHealth.use.setair.others")){
-					if ( args[1].matches("[0-9]+") ){
+					if(args[1].matches("[0-9]+") ){
 						@SuppressWarnings("deprecation")
 						Player target = player.getServer().getPlayer(args[0]);
 						if(target != null){
@@ -294,57 +281,124 @@ public class setMyHealth extends JavaPlugin{
 			}
 		}
 		if(commandLabel.equalsIgnoreCase("setmyhealth") || commandLabel.equalsIgnoreCase("smh")){
-			if(player.hasPermission("SetMyHealth.use.info")){
 				PluginDescriptionFile pdfFile = this.getDescription();
 				double version = Double.parseDouble(pdfFile.getVersion());
 				String name = pdfFile.getName();
-				if(args.length > 0){
+				if(args.length > 3 || args.length == 2){
 					player.sendMessage(ChatColor.DARK_RED + "Too many arguments!");
 					return false;
 				}
-				player.sendMessage(ChatColor.AQUA + "|||||||" + name + " v" + version + " made by Dankrushen|||||||");
-				player.sendMessage(ChatColor.DARK_AQUA + "Permission for all commands: SetMyHealth.use.*");
-				player.sendMessage(ChatColor.DARK_AQUA + "For permissions for using the command on other players just add \".others\" to the end.");
-				player.sendMessage("");
-				player.sendMessage(ChatColor.DARK_GREEN + "Commands:");
-				player.sendMessage("");
-				player.sendMessage(ChatColor.DARK_GREEN + "SetHealth");
-				player.sendMessage(ChatColor.GOLD + "Description: Sets a players health");
-				player.sendMessage(ChatColor.GREEN + "Usage: /SetHealth [player] <amount>");
-				player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /SH");
-				player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.sethealth");
-				player.sendMessage("");
-				player.sendMessage(ChatColor.DARK_GREEN + "SetHunger");
-				player.sendMessage(ChatColor.GOLD + "Description: Sets a players hunger");
-				player.sendMessage(ChatColor.GREEN + "Usage: /SetHunger [player] <amount>");
-				player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /SHR");
-				player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.sethunger");
-				player.sendMessage("");
-				player.sendMessage(ChatColor.DARK_GREEN + "SetAir");
-				player.sendMessage(ChatColor.GOLD + "Description: Sets a players air");
-				player.sendMessage(ChatColor.GREEN + "Usage: /SetAir [player] <amount>");
-				player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /SA");
-				player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.setair");
-				player.sendMessage("");
-				player.sendMessage(ChatColor.DARK_GREEN + "MaxHealth");
-				player.sendMessage(ChatColor.GOLD + "Description: Sets a players max health");
-				player.sendMessage(ChatColor.GREEN + "Usage: /MaxHealth [player] <amount>");
-				player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /MH");
-				player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.maxhealth");
-				player.sendMessage("");
-				player.sendMessage(ChatColor.DARK_GREEN + "MaxAir");
-				player.sendMessage(ChatColor.GOLD + "Description: Sets a players max air");
-				player.sendMessage(ChatColor.GREEN + "Usage: /MaxAir [player] <amount>");
-				player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /MA");
-				player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.maxair");
-				player.sendMessage("");
-				player.sendMessage(ChatColor.DARK_GREEN + "SetMyHealth");
-				player.sendMessage(ChatColor.GOLD + "Description: Gives plugin information");
-				player.sendMessage(ChatColor.GREEN + "Usage: /SetMyHealth");
-				player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /SMH");
-				player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.info");
-			}
-			else player.sendMessage(ChatColor.DARK_RED + "You have insufficiant permissions!");
+				else if(args.length == 0){
+					if(player.hasPermission("SetMyHealth.use.info")){
+						player.sendMessage(ChatColor.AQUA + "|||||||" + name + " v" + version + " made by Dankrushen|||||||");
+						player.sendMessage(ChatColor.DARK_AQUA + "Permission for all commands: SetMyHealth.use.*");
+						player.sendMessage(ChatColor.DARK_AQUA + "For permissions for using the command on other players just add \".others\" to the end except for \"SetMyHealth.use.info\", \"SetMyHealth.use.reload\", and \"SetMyHealth.use.set\".");
+						player.sendMessage("");
+						player.sendMessage(ChatColor.DARK_GREEN + "Commands:");
+						player.sendMessage("");
+						player.sendMessage(ChatColor.DARK_GREEN + "SetHealth");
+						player.sendMessage(ChatColor.GOLD + "Description: Sets a players health");
+						player.sendMessage(ChatColor.GREEN + "Usage: /SetHealth [player] <amount>");
+						player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /SH");
+						player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.sethealth");
+						player.sendMessage("");
+						player.sendMessage(ChatColor.DARK_GREEN + "SetHunger");
+						player.sendMessage(ChatColor.GOLD + "Description: Sets a players hunger");
+						player.sendMessage(ChatColor.GREEN + "Usage: /SetHunger [player] <amount>");
+						player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /SHR");
+						player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.sethunger");
+						player.sendMessage("");
+						player.sendMessage(ChatColor.DARK_GREEN + "SetAir");
+						player.sendMessage(ChatColor.GOLD + "Description: Sets a players air");
+						player.sendMessage(ChatColor.GREEN + "Usage: /SetAir [player] <amount>");
+						player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /SA");
+						player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.setair");
+						player.sendMessage("");
+						player.sendMessage(ChatColor.DARK_GREEN + "MaxHealth");
+						player.sendMessage(ChatColor.GOLD + "Description: Sets a players max health");
+						player.sendMessage(ChatColor.GREEN + "Usage: /MaxHealth [player] <amount>");
+						player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /MH");
+						player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.maxhealth");
+						player.sendMessage("");
+						player.sendMessage(ChatColor.DARK_GREEN + "MaxAir");
+						player.sendMessage(ChatColor.GOLD + "Description: Sets a players max air");
+						player.sendMessage(ChatColor.GREEN + "Usage: /MaxAir [player] <amount>");
+						player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /MA");
+						player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.maxair");
+						player.sendMessage("");
+						player.sendMessage(ChatColor.DARK_GREEN + "SetMyHealth");
+						player.sendMessage(ChatColor.GOLD + "Description: Gives plugin information");
+						player.sendMessage(ChatColor.GREEN + "Usage: /SetMyHealth");
+						player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /SMH");
+						player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.info");
+						player.sendMessage("");
+						player.sendMessage(ChatColor.DARK_GREEN + "SetMyHealth Reload");
+						player.sendMessage(ChatColor.GOLD + "Description: Reloads the plugins config");
+						player.sendMessage(ChatColor.GREEN + "Usage: /SetMyHealth Reload");
+						player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /SMH R");
+						player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.reload");
+						player.sendMessage("");
+						player.sendMessage(ChatColor.DARK_GREEN + "SetMyHealth Set");
+						player.sendMessage(ChatColor.GOLD + "Description: Sets an option in the plugins config");
+						player.sendMessage(ChatColor.GREEN + "Usage: /SetMyHealth Set <options name> <amount>");
+						player.sendMessage(ChatColor.LIGHT_PURPLE + "Alias: /SMH S");
+						player.sendMessage(ChatColor.DARK_AQUA + "Permission: SetMyHealth.use.set");
+					}
+					else player.sendMessage(ChatColor.DARK_RED + "You have insufficiant permissions!");
+				}
+				else if(args.length == 1){
+					if(args[0].equalsIgnoreCase("reload")){
+						if(player.hasPermission("SetMyHealth.use.reload")){
+							reloadConfig();
+							player.sendMessage(ChatColor.AQUA + name + " v" + version + "'s config has been reloaded.");
+						}
+						else player.sendMessage(ChatColor.DARK_RED + "You have insufficiant permissions!");
+					}
+					else if(args[0].equalsIgnoreCase("r")){
+						if(player.hasPermission("SetMyHealth.use.reload")){
+							reloadConfig();
+							player.sendMessage(ChatColor.AQUA + name + " v" + version + "'s config has been reloaded.");
+						}
+						else player.sendMessage(ChatColor.DARK_RED + "You have insufficiant permissions!");
+					}
+					else if(args[0].equalsIgnoreCase("s") || args[0].equalsIgnoreCase("set")){
+						player.sendMessage(ChatColor.DARK_RED + "Not enough arguments!");
+						return false;
+					}
+					else player.sendMessage(ChatColor.DARK_RED + "Unknown argument!"); return false;
+				}
+				else if(args.length == 3){
+					if(args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("s")){
+						if(player.hasPermission("SetMyHealth.use.set")){
+							if(args[2].matches("[0-9.]+") ){
+								final FileConfiguration config = this.getConfig();
+								double amount = Double.parseDouble(args[2]);
+								if(args[1].equalsIgnoreCase("maxhealthlimit") || args[1].equalsIgnoreCase("mhl")){
+									config.set("MaxHealthLimit", amount);
+									saveConfig();
+									player.sendMessage(ChatColor.AQUA + "Option \"MaxHealthLimit\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
+								}
+								else if(args[1].equalsIgnoreCase("maxhealthlimitothers") || args[1].equalsIgnoreCase("mhlo")){
+									config.set("MaxHealthLimitOthers", amount);
+									saveConfig();
+									player.sendMessage(ChatColor.AQUA + "Option \"MaxHealthLimitOthers\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
+								}
+								else if(args[1].equalsIgnoreCase("maxairlimit") || args[1].equalsIgnoreCase("mal")){
+									config.set("MaxAirLimit", amount);
+									saveConfig();
+									player.sendMessage(ChatColor.AQUA + "Option \"MaxAirLimit\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
+								}
+								else if(args[1].equalsIgnoreCase("maxairlimitothers") || args[1].equalsIgnoreCase("malo")){
+									config.set("MaxAirLimitOthers", amount);
+									saveConfig();
+									player.sendMessage(ChatColor.AQUA + "Option \"MaxAirLimitOthers\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
+								}
+							}
+							else player.sendMessage(ChatColor.DARK_RED + "That is not a valid number!");
+						}
+						else player.sendMessage(ChatColor.DARK_RED + "You have insufficiant permissions!");
+					}
+				}
 		}
 		return true;
 	}

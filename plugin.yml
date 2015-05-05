@@ -1,6 +1,6 @@
 name: SetMyHealth
 main: me.Dankrushen.SetMyHealth.setMyHealth
-version: 1.00
+version: 1.04
 description: Allows you to easily alter players health, air, and hunger
 author: Dankrushen
 commands:
@@ -28,3 +28,11 @@ commands:
     description: Gives plugin information
     usage: /setmyhealth
     aliases: smh
+  setmyhealth reload:
+    description: Reloads the plugins config
+    usage: /setmyhealth reload
+    aliases: smh r
+  setmyhealth set:
+    description: Sets an option in the plugins config
+    usage: /setmyhealth set <options name> <amount>
+    aliases: smh s

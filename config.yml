@@ -1,0 +1,13 @@
+####Configuration File for SetMyHealth####
+
+#Changes how high players can set their own maximum health#
+MaxHealthLimit: 50
+
+#Changes how high players can set other players maximum health#
+MaxHealthOthersLimit: 50
+
+#Changes how high players can set their own maximum air#
+MaxAirLimit: 60
+
+#Changes how high players can set other players maximum air#
+MaxAirOthersLimit: 60
