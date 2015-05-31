@@ -24,6 +24,8 @@ public class setMyHealth extends JavaPlugin{
 		PluginDescriptionFile pdfFile = this.getDescription();
 		this.logger.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " Has Been Enabled.");
 		initialiseConfig();
+		@SuppressWarnings("unused")
+		Updater updater = new Updater(this, 91493, this.getFile(), Updater.UpdateType.DEFAULT, true);
 	}
 	
 	public void initialiseConfig(){
