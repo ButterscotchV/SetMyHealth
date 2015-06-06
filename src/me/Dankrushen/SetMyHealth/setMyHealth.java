@@ -1,5 +1,6 @@
 package me.Dankrushen.SetMyHealth;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -21,11 +22,20 @@ public class setMyHealth extends JavaPlugin{
 	}
 
 	public void onEnable() {
+		try {
+	        MetricsLite metrics = new MetricsLite(this);
+	        metrics.start();
+	    } catch (IOException e) {
+	        // Failed to submit the stats :-(
+	    }
 		PluginDescriptionFile pdfFile = this.getDescription();
 		this.logger.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " Has Been Enabled.");
 		initialiseConfig();
-		@SuppressWarnings("unused")
-		Updater updater = new Updater(this, 91493, this.getFile(), Updater.UpdateType.DEFAULT, true);
+		if(getConfig().getBoolean("Auto-Update") == true){
+			@SuppressWarnings("unused")
+			Updater updater = new Updater(this, 91493, this.getFile(), Updater.UpdateType.DEFAULT, true);
+		}
+		else this.logger.info("Auto-Updating is not enabled so SetMyHealth did not check for updates and stayed at version " + pdfFile.getVersion());
 	}
 	
 	public void initialiseConfig(){
@@ -372,31 +382,42 @@ public class setMyHealth extends JavaPlugin{
 				else if(args.length == 3){
 					if(args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("s")){
 						if(player.hasPermission("SetMyHealth.use.set")){
-							if(args[2].matches("[0-9.]+") ){
-								final FileConfiguration config = this.getConfig();
-								double amount = Double.parseDouble(args[2]);
-								if(args[1].equalsIgnoreCase("maxhealthlimit") || args[1].equalsIgnoreCase("mhl")){
-									config.set("MaxHealthLimit", amount);
-									saveConfig();
-									player.sendMessage(ChatColor.AQUA + "Option \"MaxHealthLimit\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
+							final FileConfiguration config = this.getConfig();
+							if(args[1].equalsIgnoreCase("maxhealthlimit") || args[1].equalsIgnoreCase("mhl") || args[1].equalsIgnoreCase("maxhealthlimitothers") || args[1].equalsIgnoreCase("mhlo") || args[1].equalsIgnoreCase("maxairlimit") || args[1].equalsIgnoreCase("mal") || args[1].equalsIgnoreCase("maxairlimitothers") || args[1].equalsIgnoreCase("malo")){
+								if(args[2].matches("[0-9.]+") ){
+									double amount = Double.parseDouble(args[2]);
+									if(args[1].equalsIgnoreCase("maxhealthlimit") || args[1].equalsIgnoreCase("mhl")){
+										config.set("MaxHealthLimit", amount);
+										saveConfig();
+										player.sendMessage(ChatColor.AQUA + "Option \"MaxHealthLimit\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
+									}
+									else if(args[1].equalsIgnoreCase("maxhealthlimitothers") || args[1].equalsIgnoreCase("mhlo")){
+										config.set("MaxHealthLimitOthers", amount);
+										saveConfig();
+										player.sendMessage(ChatColor.AQUA + "Option \"MaxHealthLimitOthers\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
+									}
+									else if(args[1].equalsIgnoreCase("maxairlimit") || args[1].equalsIgnoreCase("mal")){
+										config.set("MaxAirLimit", amount);
+										saveConfig();
+										player.sendMessage(ChatColor.AQUA + "Option \"MaxAirLimit\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
+									}
+									else if(args[1].equalsIgnoreCase("maxairlimitothers") || args[1].equalsIgnoreCase("malo")){
+										config.set("MaxAirLimitOthers", amount);
+										saveConfig();
+										player.sendMessage(ChatColor.AQUA + "Option \"MaxAirLimitOthers\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
+									}
 								}
-								else if(args[1].equalsIgnoreCase("maxhealthlimitothers") || args[1].equalsIgnoreCase("mhlo")){
-									config.set("MaxHealthLimitOthers", amount);
-									saveConfig();
-									player.sendMessage(ChatColor.AQUA + "Option \"MaxHealthLimitOthers\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
-								}
-								else if(args[1].equalsIgnoreCase("maxairlimit") || args[1].equalsIgnoreCase("mal")){
-									config.set("MaxAirLimit", amount);
-									saveConfig();
-									player.sendMessage(ChatColor.AQUA + "Option \"MaxAirLimit\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
-								}
-								else if(args[1].equalsIgnoreCase("maxairlimitothers") || args[1].equalsIgnoreCase("malo")){
-									config.set("MaxAirLimitOthers", amount);
-									saveConfig();
-									player.sendMessage(ChatColor.AQUA + "Option \"MaxAirLimitOthers\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
-								}
+								else player.sendMessage(ChatColor.DARK_RED + "That is not a valid number!");
 							}
-							else player.sendMessage(ChatColor.DARK_RED + "That is not a valid number!");
+							else if(args[1].equalsIgnoreCase("auto-update") || args[1].equalsIgnoreCase("au")){
+								if(args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")){
+									boolean amount = Boolean.parseBoolean(args[2]);
+									config.set("Auto-Update", amount);
+									saveConfig();
+									player.sendMessage(ChatColor.AQUA + "Option \"Auto-Update\" in the config has been set to " + ChatColor.GREEN + amount + ChatColor.AQUA + ".");
+								}
+								else player.sendMessage(ChatColor.DARK_RED + "That is not a valid answer! The two valid answers are \"true\" or \"false\".");
+							}
 						}
 						else player.sendMessage(ChatColor.DARK_RED + "You have insufficiant permissions!");
 					}

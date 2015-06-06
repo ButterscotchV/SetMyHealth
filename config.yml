@@ -11,3 +11,6 @@ MaxAirLimit: 60
 
 #Changes how high players can set other players maximum air#
 MaxAirOthersLimit: 60
+
+#Enables or disables Auto-Updating
+Auto-Update: true
