@@ -4,13 +4,13 @@
 MaxHealthLimit: 50
 
 #Changes how high players can set other players maximum health#
-MaxHealthOthersLimit: 50
+MaxHealthLimitOthers: 50
 
 #Changes how high players can set their own maximum air#
 MaxAirLimit: 60
 
 #Changes how high players can set other players maximum air#
-MaxAirOthersLimit: 60
+MaxAirLimitOthers: 60
 
 #Enables or disables Auto-Updating
 Auto-Update: true
