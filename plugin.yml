@@ -1,6 +1,6 @@
 name: SetMyHealth
 main: me.Dankrushen.SetMyHealth.SetMyHealth
-version: 1.08
+version: 1.09
 description: Allows you to easily alter players health, air, and hunger
 author: Dankrushen
 commands:
